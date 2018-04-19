@@ -62,7 +62,7 @@ ROOT_URLCONF = 'money.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -87,6 +87,8 @@ DATABASES = {
         'NAME': 'money_traffic',
         'USER': 'money_traffic',
         'PASSWORD': 'money_traffic',
+        'HOST': 'localhost',
+        'PORT': '3306',        
     }
 }
 
@@ -128,6 +130,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/var/www/static/',
+]
+
 
 # Custom settings
 
