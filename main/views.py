@@ -17,7 +17,7 @@ from django.shortcuts import redirect
 # Create your views here.
 def main_page(request):
     user = request.user
-    return render(request, 'money/main_page.html', {'user': user})
+    return render(request, 'main/index-page.html', {'user': user})
 
 def user_detail(request):
     user = request.user
@@ -39,7 +39,8 @@ class RegisterFormView(FormView):
 class LoginFormView(FormView):
     form_class = AuthenticationForm
 
-    template_name = "money/login.html"
+    # template_name = "money/login.html"
+    template_name = "main/login-page.html"
 
     success_url = "/"
 

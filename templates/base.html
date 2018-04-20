@@ -1,0 +1,41 @@
+{% load staticfiles %}
+{% load static %}
+<html>
+    <head>
+
+        <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+        <title>Logos Project</title>
+    </head>
+    <body ng-app="money">
+        {% block main_container %}
+
+            <div class="container">
+                <div class="row">
+                <h2>Головна</h2>
+        
+                {% if user.is_authenticated %}
+                        <p class="hi">Hello <a href="{% url 'user_detail' %}">{{ user.first_name  }}!</a></p>
+                        <p><a href="{% url 'logout' %}">Logout</a></p>
+                {% else %}
+                        <p>You are not logged in</p>
+                        <p><a href="{% url 'login_in' %}">Login</a> or 
+                        <a href="{% url 'register_in' %}">Register</a></p>
+                {% endif %}
+        
+        
+
+                {% verbatim %}
+                    angular {{ 2 + 2 }}
+                {% endverbatim %} 
+
+                </div>
+            </div>
+
+        {% endblock main_container %}
+
+        <script src="{% static "js/bootstrap.min.js" %}"></script>
+        <script src="{% static "js/angular.min.js" %}"></script>
+        <script src="{% static "js/angular-route.min.js" %}"></script>
+        <script src="{% static "js/app.js" %}"></script>
+    </body>
+</html>
