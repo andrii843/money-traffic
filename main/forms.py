@@ -1,8 +1,21 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-
 from django import forms
 from django.core.exceptions import ValidationError
+from users.models import User
+from .models import Profile
+from django.forms import ModelForm
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('bio', 'location')
+        
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email')        
 
 
 class CustomUserCreationForm(forms.Form):
