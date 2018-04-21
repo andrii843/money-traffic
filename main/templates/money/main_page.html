@@ -5,14 +5,19 @@
         <title>Logos Project</title>
     </head>
     <body ng-app="money">
-    <p class="hi">Hi {{ user.username }}!</p>
-    <h1>Hello</h1>
-    <p><a href="{% url 'login_in' %}">Login</a> or 
-    <a href="{% url 'register_in' %}">Register</a></p>
-    <p><a href="{% url 'logout' %}">Logout</a></p>
-
-
+    <h2>Main Page</h2>
     
+    {% if user.is_authenticated %}
+            <p class="hi">Hello <a href="{% url 'user_detail' %}">{{ user.first_name  }}!</a></p>
+            <p><a href="{% url 'logout' %}">Logout</a></p>
+    {% else %}
+            <p>You are not logged in</p>
+            <p><a href="{% url 'login_in' %}">Login</a> or 
+            <a href="{% url 'register_in' %}">Register</a></p>
+    {% endif %}
+    
+    
+
     {% verbatim %}
         angular {{ 2 + 2 }}
     {% endverbatim %} 

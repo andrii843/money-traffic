@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+  <a href="{% url 'main_page' %}">Main Page</a>
+   
+   <h2>{{ user.get_full_name }}</h2>
+<ul>
+  <li>Username: {{ user.username }}</li>
+  <li>First-name: {{ user.first_name }}</li>
+  <li>Second-name: {{ user.last_name }}</li>
+  <li>Email: {{ user.email }}</li>
+  <li>Location: {{ user.profile.location }}</li>
+  <li>Bio: {{ user.profile.bio }}</li>
+</ul>
+<a href="{% url 'update_profile' %}">Update Your Profile</a>
+
+
+    
+</body>
+</html>

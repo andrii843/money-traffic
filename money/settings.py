@@ -140,3 +140,5 @@ STATICFILES_DIRS = [
 # Custom settings
 
 AUTH_USER_MODEL = 'users.User'
+
+LOGOUT_REDIRECT_URL = 'main_page'
