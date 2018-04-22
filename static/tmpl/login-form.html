@@ -1,0 +1,12 @@
+﻿<div ng-if="!user_is_auth">
+  <h3>Форма авторизації</h3>
+  <form novalidate>
+    <div class="form-group">
+      <input type="text" class="form-control" ng-model="user.login" placeholder="Користувач">
+    </div>
+    <div class="form-group">
+      <input type="password" class="form-control" ng-model="user.password" placeholder="Пароль">
+    </div>
+    <button class="btn btn-success" ng-click="login(user)">Увійти</button>
+  </form>  
+</div>
