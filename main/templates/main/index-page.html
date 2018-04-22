@@ -3,22 +3,34 @@
 {% block main_container %}
     <div class="container">
         <div class="row">
-        <h2>Головна сторінка</h2>
-
-        {% if user.is_authenticated %}
-                <p class="hi">Hello <a href="{% url 'user_detail' %}">{{ user.first_name  }}!</a></p>
-                <p><a href="{% url 'logout' %}">Logout</a></p>
-        {% else %}
-                <p>You are not logged in</p>
-                <p><a href="{% url 'login_in' %}">Login</a> or 
-                <a href="{% url 'register_in' %}">Register</a></p>
-        {% endif %}
-
+        <h2>Smart Wallet</h2>
 
         {% verbatim %}
-            angular {{ 2 + 2 }}
-        {% endverbatim %} 
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4" ng-if="!user_is_auth">
+                    <div>
+                      <!-- Nav tabs -->
+                      <ul class="nav nav-pills nav-justified" role="tablist">
+                        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Авторизація</a></li>
+                        <li role="presentation"><a href="#register" aria-controls="profile" role="tab" data-toggle="tab">Реєстрація</a></li>
+                      </ul>
 
+                      <!-- Tab panes -->
+                      <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="home">
+                            <login-form></login-form>   
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="register">
+                            <register-form></register-form>   
+                        </div>
+                      </div>
+
+                    </div>                    
+                </div>
+                <logout-section></logout-section>                          
+            </div>
+        {% endverbatim %} 
+        
         </div>
     </div>
 
