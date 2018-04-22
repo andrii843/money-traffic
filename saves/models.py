@@ -12,4 +12,6 @@ class Save(models.Model):
         return self.name
 
     class Meta:
+        verbose_name = 'Save'
+        verbose_name_plural = 'Saves'
         ordering = ['name']
