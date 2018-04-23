@@ -11,7 +11,7 @@ class Outcome(models.Model):
     date = models.DateTimeField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    to_save = models.ForeignKey(Save, on_delete=models.CASCADE, related_name='saves', related_query_name='save',)
+    by_save = models.ForeignKey(Save, on_delete=models.CASCADE, related_name='saves', related_query_name='save',)
 
     class Meta:
         verbose_name = 'Outcome'

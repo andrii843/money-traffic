@@ -11,7 +11,7 @@ class Income(models.Model):
     date = models.DateTimeField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     source = models.ForeignKey(Source, on_delete=models.CASCADE)
-    to_save = models.ForeignKey(Save, on_delete=models.CASCADE)
+    by_save = models.ForeignKey(Save, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Income'
