@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'saves',
     'sources',
     'users',
+
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -140,3 +142,11 @@ STATICFILES_DIRS = [
 # Custom settings
 
 AUTH_USER_MODEL = 'users.User'
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
