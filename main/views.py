@@ -14,8 +14,10 @@ from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from users.models import User
-
-
+from categories.models import Category
+from sources.models import Source
+from saves.models import Save
+from django.core import serializers
 import json
 
 
@@ -29,7 +31,7 @@ def user_detail(request):
     return render(request, 'users/user_detail.html', {'user': user})
 
 def json_user_info(request):
-    return JsonResponse({'is_auth':request.user.is_authenticated, 'username':request.user.username}, safe=False)
+    return JsonResponse({'is_auth':request.user.is_authenticated, 'username':request.user.username, 'id':request.user.id}, safe=False)
 
 
 def login_user(request):
@@ -45,6 +47,80 @@ def login_user(request):
         if user is not None:
             login(request, user)
             return JsonResponse({"user":request.user.id},safe=False)
+    return JsonResponse({},safe=False)
+
+def add_category(request):
+    if request.method == 'POST':
+        body = request.body.decode("utf-8")
+        request.POST = json.loads(body)
+
+        category_name = request.POST['name']
+        user_id = request.POST['user_id']
+
+        user = User.objects.get(id=user_id)
+
+        category = Category.objects.filter(user=user, name=category_name)
+
+        if category.count() == 0: # Категорія не знайдена
+            Category.objects.create(user=user, name=category_name)
+
+    return JsonResponse({},safe=False)
+
+def show_categories(request):
+    if request.user.is_authenticated:
+        user = request.user
+        categories = list(Category.objects.filter(user=user).values())
+        return JsonResponse(categories,safe=False)
+    return JsonResponse({},safe=False)
+
+
+def add_source(request):
+    if request.method == 'POST':
+        body = request.body.decode("utf-8")
+        request.POST = json.loads(body)
+
+        source_name = request.POST['name']
+        user_id = request.POST['user_id']
+
+        user = User.objects.get(id=user_id)
+        source = Source.objects.filter(user=user, name=source_name)
+
+        if source.count() == 0:
+            Source.objects.create(user=user, name=source_name)
+
+    return JsonResponse({},safe=False)   
+
+
+def show_sources(request):
+    if request.user.is_authenticated:
+        user = request.user
+        sources = list(Source.objects.filter(user=user).values())
+        return JsonResponse(sources,safe=False)
+    return JsonResponse({},safe=False)
+
+
+def add_save(request):
+    if request.method == 'POST':
+        body = request.body.decode("utf-8")
+        request.POST = json.loads(body)
+
+        save_name = request.POST['name']
+        summa = request.POST['summa']
+        user_id = request.POST['user_id']
+
+        user = User.objects.get(id=user_id)
+        save = Save.objects.filter(user=user, name=save_name)
+
+        if save.count() == 0:
+            Save.objects.create(user=user, name=save_name, summa=summa)
+
+    return JsonResponse({},safe=False)
+
+def show_saves(request):
+    if request.user.is_authenticated:
+        user = request.user
+        saves = list(Save.objects.filter(user=user).values())
+        return JsonResponse(saves,safe=False)
     return JsonResponse({},safe=False)
 
 

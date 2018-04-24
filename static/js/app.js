@@ -29,7 +29,17 @@ angular.module("money", ['ngRoute','ngCookies'])
     // Головний контроллер на сторінці
     .controller("MoneyCtrl", function($scope, $http) {
     
-        $scope.user_is_auth = false;
+        $scope.user_is_auth = true;
+
+        $scope.hide_all_forms = function(){
+            $scope.display_save_form = false;
+            $scope.display_source_form = false;
+            $scope.display_category_form = false;
+            $scope.display_income_form = false;
+        }
+
+
+
 
 
 
@@ -44,6 +54,12 @@ angular.module("money", ['ngRoute','ngCookies'])
 
                     if($scope.user.is_auth == true) {
                         $scope.user_is_auth = true;
+
+                        console.log($scope.user)
+
+
+                    } else {
+                        $scope.user_is_auth = false;
                     }
 
                 }, function errorCallback(response) {
@@ -51,9 +67,45 @@ angular.module("money", ['ngRoute','ngCookies'])
                     $scope.user_is_auth = true;
                 });
         }
+
+
+        $scope.get_sources = function(){
+            $http.get('http://localhost:8000/api/sources/')
+                .then(function successCallback(response) {
+                    $scope.sources = response.data;
+                }, function errorCallback(response) {
+                    console.log("Error!!!" + response.err);
+                });
+        }
+
+        $scope.get_categories = function(){
+            $http.get('http://localhost:8000/api/categories/')
+                .then(function successCallback(response) {
+                    $scope.categories = response.data;
+                }, function errorCallback(response) {
+                    console.log("Error!!!" + response.err);
+                });
+        }        
+
+        $scope.get_saves = function(){
+            $http.get('http://localhost:8000/api/saves/')
+                .then(function successCallback(response) {
+                    $scope.saves = response.data;
+                }, function errorCallback(response) {
+                    console.log("Error!!!" + response.err);
+                });
+        }           
+
+
+        $scope.init = function() {
+            $scope.update_user_info();
+            $scope.get_sources();
+            $scope.get_saves();
+            $scope.get_categories();             
+        }
         
         $scope.update_user_info();
- 
+        $scope.init();
     })
 
     // Авторизації користувача
@@ -75,6 +127,7 @@ angular.module("money", ['ngRoute','ngCookies'])
                     $http.post('http://localhost:8000/api/login/', objUser)
                         .then(function successCallback(response) {
                             $scope.update_user_info();
+                            $scope.init();
                             // $scope.user_is_auth = true;
                         }, function errorCallback(response) {
                         console.log("Error!!!" + response.err);
@@ -128,6 +181,187 @@ angular.module("money", ['ngRoute','ngCookies'])
                         }, function errorCallback(response) {
                         console.log("Error!!!" + response.err);
                         });                    
+                }
+            }
+        }
+    })
+
+    /* Робота з категоріями витрат*/
+    .directive('categoryFormAdd', function(){
+        return {
+            replace: true,
+            templateUrl: '/static/tmpl/category-form-add.html',
+            controller: function($scope, $http){
+
+                $scope.display_category_form = false;
+
+
+                $scope.addCategoryClick =function(){
+                    $scope.hide_all_forms();
+                    $scope.display_category_form = true;
+                }
+
+
+                /* Зберігаємо категорію в БД */
+                $scope.store_category = function(formData){
+
+                    
+                    var obj = {
+                        name: formData.name, // Назва категорії
+                        user_id: $scope.user.id,
+                    };
+
+
+                    $http.post('http://localhost:8000/api/category/add/',obj)
+                        .then(function successCallback(response) {
+                            $scope.update_user_info();
+                            $scope.display_category_form = false;
+                            $scope.get_categories();
+                        }, function errorCallback(response) {
+                        console.log("Error!!!" + response.err);
+                        });
+
+                }
+
+
+                $scope.close_category_form = function(){
+                    $scope.display_category_form = false;   
+                }
+            }
+        }
+    })
+
+    /* Робота з джерелами надходжень */
+    .directive('sourceFormAdd', function(){
+        return {
+            replace: true,
+            templateUrl: '/static/tmpl/source-form-add.html',
+            controller: function($scope, $http){
+
+                $scope.display_source_form = false;
+
+
+                $scope.addSourceClick =function(){
+                    $scope.hide_all_forms();
+                    $scope.display_source_form = true;
+                }
+
+
+                /* Зберігаємо категорію в БД */
+                $scope.store_source = function(formData){
+
+                    
+                    var obj = {
+                        name: formData.name, // Назва категорії
+                        user_id: $scope.user.id,
+                    };
+
+
+                    $http.post('http://localhost:8000/api/source/add/',obj)
+                        .then(function successCallback(response) {
+                            $scope.update_user_info();
+                            $scope.display_source_form = false;   
+                            $scope.get_sources();
+                        }, function errorCallback(response) {
+                        console.log("Error!!!" + response.err);
+                        });
+
+                }
+
+
+                $scope.close_source_form = function(){
+                    $scope.display_source_form = false;   
+                }
+            }
+        }
+    })
+
+
+    /* Робота з джерелами надходжень */
+    .directive('saveFormAdd', function(){
+        return {
+            replace: true,
+            templateUrl: '/static/tmpl/save-form-add.html',
+            controller: function($scope, $http){
+
+                $scope.display_save_form = false;
+
+
+                $scope.addSaveClick =function(){
+                    $scope.hide_all_forms();
+                    $scope.display_save_form = true;
+                }
+
+
+                /* Зберігаємо категорію в БД */
+                $scope.store_save = function(formData){
+
+                    
+                    var obj = {
+                        name: formData.name, // Назва категорії
+                        summa: formData.summa,
+                        user_id: $scope.user.id,
+                    };
+
+
+                    $http.post('http://localhost:8000/api/save/add/',obj)
+                        .then(function successCallback(response) {
+                            $scope.update_user_info();
+                            $scope.display_save_form = false;
+                            $scope.get_saves();
+                        }, function errorCallback(response) {
+                        console.log("Error!!!" + response.err);
+                        });
+
+                }
+
+                $scope.close_save_form = function(){
+                    $scope.display_save_form = false;   
+                }
+            }
+        }
+    })
+
+
+    /* Робота з джерелами надходжень */
+    .directive('incomeForm', function(){
+        return {
+            replace: true,
+            templateUrl: '/static/tmpl/income-form.html',
+            controller: function($scope, $http){
+
+                $scope.display_income_form = false;
+
+
+                $scope.addIncomeClick =function(){
+                    $scope.hide_all_forms();
+                    $scope.display_income_form = true;
+                }
+
+
+                /* Зберігаємо категорію в БД */
+                $scope.store_save = function(formData){
+
+                    
+                    var obj = {
+                        name: formData.name, // Назва категорії
+                        summa: formData.summa,
+                        user_id: $scope.user.id,
+                    };
+
+
+                    // $http.post('http://localhost:8000/api/income/add/',obj)
+                    //     .then(function successCallback(response) {
+                    //         $scope.update_user_info();
+                    //         $scope.display_save_form = false;                            
+                    //     }, function errorCallback(response) {
+                    //     console.log("Error!!!" + response.err);
+                    //     });
+
+                }
+
+                $scope.close_income_form = function(){
+                    $scope.display_income_form = false;   
                 }
             }
         }

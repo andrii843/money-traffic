@@ -14,4 +14,18 @@ urlpatterns = [
     path('api/logout/', views.logout_user, name='logout_user'),
     path('api/user/', views.json_user_info, name='json_user_detail'),
     path('api/register/', views.register_user, name='register_user'),
+    
+
+    path('api/category/add/', views.add_category, name='add_category'),
+    path('api/categories/', views.show_categories, name='show_categories'),
+
+    path('api/source/add/', views.add_source, name='add_source'),
+    path('api/sources/', views.show_sources, name='show_sources'),
+
+    path('api/save/add/', views.add_save, name='add_save'),
+    path('api/saves/', views.show_saves, name='show_saves'),
+
+
+
+
 ]

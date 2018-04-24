@@ -27,7 +27,21 @@
 
                     </div>                    
                 </div>
-                <logout-section></logout-section>                          
+
+                <logout-section></logout-section>
+                <div class="wrap-cmd" ng-if="user_is_auth">
+                    <button class="btn btn-default" ng-click="addCategoryClick()">Додати категорію витрат</button>
+                    <button class="btn btn-default" ng-click="addSourceClick()">Додати джерело надходжень</button>
+                    <button class="btn btn-default" ng-click="addSaveClick()">Додати міcце для накопичень</button>
+                    <button class="btn btn-default" ng-click="addIncomeClick()">Додати надходження</button>
+                </div>
+
+                <category-form-add></category-form-add>
+                <source-form-add></source-form-add>
+                <save-form-add></save-form-add>
+
+                <income-form></income-form>
+
             </div>
         {% endverbatim %} 
         
