@@ -1,0 +1,27 @@
+<!-- Нова Категорія -->
+<div ng-if="user_is_auth&&display_outcome_form">
+  <h3>Нова витрата коштів</h3>
+  <form novalidate>
+
+    <label for="source_type">Категорія витрат</label>
+    <div id="source_type" class="form-group">
+        <select ng-model="outcome.selectedCategory" ng-options="category.name for category in categories" class="form-control"></select>
+    </div>  
+
+
+    <div class="form-group">
+      <input type="text" class="form-control" ng-model="outcome.summa" placeholder="Cума витрат">
+    </div>  
+
+    <div class="form-group">
+      <textarea class="form-control" cols="30" rows="5" ng-model="outcome.notes" placeholder="Примітка"></textarea>
+    </div>
+
+    <label for="save_type">Місце зберігання коштів</label>
+    <div id="save_type" class="form-group">
+        <select ng-model="outcome.selectedSave" ng-options="save.name for save in saves" class="form-control"></select>
+    </div>  
+
+    <button class="btn btn-success" ng-click="store_outcome(outcome)">Зберегти</button>
+  </form>  
+</div>

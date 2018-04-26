@@ -9,11 +9,24 @@
         <title>SmartWallet</title>
     </head>
     <body ng-controller="MoneyCtrl">
-        {% block main_container %}
 
+    <div id="wrapper">
+        {% block sidebar %}
 
+        {% endblock sidebar %}
 
-        {% endblock main_container %}
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                
+                {% block main_container %}
+
+                {% endblock main_container %}
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+    </div>
+        
 
 
         <script src="{% static "js/jquery-3.3.1.min.js" %}"></script>

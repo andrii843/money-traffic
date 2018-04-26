@@ -7,7 +7,7 @@ from .forms import ProfileForm
 from .forms import UserForm
 from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
+from django.db import transaction, connection
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.shortcuts import redirect
@@ -17,6 +17,8 @@ from users.models import User
 from categories.models import Category
 from sources.models import Source
 from saves.models import Save
+from incomes.models import Income
+from outcomes.models import Outcome
 from django.core import serializers
 import json
 
@@ -88,7 +90,104 @@ def add_source(request):
         if source.count() == 0:
             Source.objects.create(user=user, name=source_name)
 
-    return JsonResponse({},safe=False)   
+    return JsonResponse({},safe=False)
+
+def add_income(request):
+    if request.method == 'POST':
+        body = request.body.decode("utf-8")
+        request.POST = json.loads(body)
+
+        user_id = request.POST['user_id']
+        save_id = request.POST['save_id']
+        source_id = request.POST['source_id']
+        summa = request.POST['summa']
+        notes = request.POST['notes']
+
+        user = User.objects.get(id=user_id)
+        source = Source.objects.get(id=source_id)
+        fsave = Save.objects.get(id=save_id)
+
+        Income.objects.create(user=user, notes=notes, source=source, fsave=fsave, summa=summa)
+    return JsonResponse({},safe=False)    
+
+
+def show_incomes(request):
+    if request.user.is_authenticated:
+        user = request.user
+
+        incomes = list(Income.objects.filter(user=user).values())
+        return JsonResponse(incomes, safe=False)
+
+    return JsonResponse({},safe=False)
+
+
+def dictfetchall(cursor):
+    "Returns all rows from a cursor as a dict"
+    desc = cursor.description
+    return [
+        dict(zip([col[0] for col in desc], row))
+        for row in cursor.fetchall()
+    ]    
+
+def show_history(request):
+    if request.user.is_authenticated:
+        user = request.user
+
+        cursor = connection.cursor()
+        sql1='select incomes.id, DATE_FORMAT(created_at,"%d-%m-%Y %H:%i") as opdate,summa,"incomes" as type, ' \
+        'CONVERT(sources.name USING utf8) as source, incomes.source_id , "" as category,0 as category_id, notes, ' \
+        'u.username, incomes.user_id from incomes ' \
+        'inner join sources on sources.id = incomes.source_id ' \
+        'inner join users_user as u on u.id = incomes.user_id ' \
+        'where incomes.user_id = {} '.format(user.id)
+
+
+        cursor.execute(sql1)
+
+        res=dictfetchall(cursor)
+        
+        sql2 ='select outcomes.id, DATE_FORMAT(outcomes.created_at, "%d-%m-%Y %H:%i") as opdate, outcomes.summa, "expenses" as type, ' \
+        ' "" as source, 0 as source_id, c.name as category, outcomes.category_id,outcomes.notes, u.username, outcomes.user_id  from outcomes ' \
+        'inner join categories as c on outcomes.category_id = c.id ' \
+        'inner join users_user as u on u.id = outcomes.user_id ' \
+        'where outcomes.user_id = {} '.format(user.id)
+
+        cursor.execute(sql2)
+
+        res2=dictfetchall(cursor)
+        return JsonResponse(res+res2, safe=False)
+    
+
+    return JsonResponse({},safe=False)
+
+def show_outcomes(request):
+    if request.user.is_authenticated:
+        user = request.user
+
+        outcomes = list(Outcome.objects.filter(user=user).values())
+        return JsonResponse(outcomes, safe=False)
+
+    return JsonResponse({},safe=False)
+
+
+def add_outcome(request):
+    if request.method == 'POST':
+        body = request.body.decode("utf-8")
+        request.POST = json.loads(body)
+
+        user_id = request.POST['user_id']
+        save_id = request.POST['save_id']
+        category_id = request.POST['category_id']
+        summa = request.POST['summa']
+        notes = request.POST['notes']
+
+        user = User.objects.get(id=user_id)
+        category = Category.objects.get(id=category_id)
+        fsave = Save.objects.get(id=save_id)
+
+        Outcome.objects.create(user=user, notes=notes, category=category, fsave=fsave, summa=summa)
+    return JsonResponse({},safe=False)    
+
 
 
 def show_sources(request):

@@ -21,8 +21,14 @@ urlpatterns = [
 
     path('api/source/add/', views.add_source, name='add_source'),
     path('api/sources/', views.show_sources, name='show_sources'),
+    path('api/incomes/', views.show_incomes, name='show_incomes'),
+    path('api/outcomes/', views.show_outcomes, name='show_outcomes'),
+    path('api/history/', views.show_history, name='show_history'),
+
 
     path('api/save/add/', views.add_save, name='add_save'),
+    path('api/income/add/', views.add_income, name='add_income'),
+    path('api/outcome/add/', views.add_outcome, name='add_outcome'),
     path('api/saves/', views.show_saves, name='show_saves'),
 
 
