@@ -1,0 +1,27 @@
+<!-- Нова Категорія -->
+<div ng-if="user_is_auth&&display_income_form">
+  <h3>Нове надходження коштів</h3>
+  <form novalidate>
+
+    <label for="source_type">Джерело надходження коштів</label>
+    <div id="source_type" class="form-group">
+        <select ng-model="income.selectedSource" ng-options="source.name for source in sources" class="form-control"></select>
+    </div>  
+
+
+    <div class="form-group">
+      <input type="text" class="form-control" ng-model="income.summa" placeholder="Cума надходження">
+    </div>  
+
+    <div class="form-group">
+      <textarea class="form-control" cols="30" rows="5" ng-model="income.notes" placeholder="Примітка"></textarea>
+    </div>
+
+    <label for="save_type">Місце зберігання коштів</label>
+    <div id="save_type" class="form-group">
+        <select ng-model="income.selectedSave" ng-options="save.name for save in saves" class="form-control"></select>
+    </div>  
+
+    <button class="btn btn-success" ng-click="store_income(income)">Зберегти</button>
+  </form>  
+</div>

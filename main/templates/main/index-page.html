@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+    {% verbatim %}
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper" ng-hide="!user_is_auth">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                        Smart Wallet
+                </li>
+                <li><a href="#" ng-click="addCategoryClick()">Додати нову категорію</a></li>
+                <li><a href="#" ng-click="addSourceClick()">Додати джерело надходжень</a></li>
+                <li><a href="#" ng-click="addSaveClick()">Додати місце для накопичень</a></li>                
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->    
+    {% endverbatim %}
+{% endblock sidebar %}
+
+{% block main_container %}
+
+
+        {% verbatim %}
+        
+
+        <nav class="navbar navbar-default" ng-hide="!user_is_auth">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a href="#menu-toggle" class="btn btn-default navbar-btn" id="menu-toggle" ng-hide="!user_is_auth">Меню</a>
+                </div>
+
+                <div class="wrap-cmd navbar-header" ng-if="user_is_auth">
+                    <button class="btn btn-default navbar-btn" ng-click="addIncomeClick()">Додати надходження</button>
+                </div>
+
+                <div class="wrap-cmd navbar-header" ng-if="user_is_auth">
+                    <button class="btn btn-default navbar-btn" ng-click="addOutcomeClick()">Додати витрату</button>
+                </div>
+
+                <div class="wrap-cmd navbar-header" ng-if="user_is_auth">
+                    <button class="btn btn-default navbar-btn" ng-click="addHistoryClick()">Історія операцій</button>
+                </div>
+
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li><logout-section></logout-section></li>
+                </ul>
+            </div>
+        </nav>
+
+        
+        <div class="row">
+           
+
+            <div class="col-md-4 col-md-offset-4" ng-if="!user_is_auth">
+                <div>
+                  <!-- Nav tabs -->
+                  <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Авторизація</a></li>
+                    <li role="presentation"><a href="#register" aria-controls="profile" role="tab" data-toggle="tab">Реєстрація</a></li>
+                  </ul>
+
+                  <!-- Tab panes -->
+                  <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="home">
+                        <login-form></login-form>   
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="register">
+                        <register-form></register-form>   
+                    </div>
+                  </div>
+
+                </div>                    
+            </div>
+
+            <div class="wrap" ng-hide="!user_is_auth">
+                <div class="col-md-12">
+                    <category-form-add></category-form-add>
+                    <source-form-add></source-form-add>
+                    <save-form-add></save-form-add>
+
+                    <income-form></income-form>
+                    <outcome-form></outcome-form>
+                </div>
+
+                <div class="col-md-12">
+                    <h4>Джерела надходжень</h4>
+                    <div ng-repeat="source in sources" class="item"><span class="item__title">{{source.name}}</span></div>                
+                </div>                
+
+
+                <div class="col-md-12">
+                    <h4>Категорії витрат</h4>
+                    <div ng-repeat="category in categories" class="item"><span class="item__title">{{category.name}}</span></div>                
+                </div>                
+
+                <div class="col-md-12">
+                    <h4>Місця накопичень</h4>
+                    <div ng-repeat="save in saves" class="item"><span class="item__title">{{save.name}}</span></div>
+                </div>
+            </div>
+            <div ng-hide="!user_is_auth">
+                <table class="table table-condensed table-bordered">
+                    <tr>
+                        <th>Дата</th>
+                        <th>Сума</th>
+                        <th>Тип</th>
+                        <th>Джерело</th>
+                        <th>Категорія</th>
+                        <th>Коментар</th>
+                    </tr>
+                    <tr ng-repeat="h in history">
+                        <td>{{ h.opdate }}</td>
+                        <td>{{ h.summa }}</td>
+                        <td>{{ h.type }}</td>
+                        <td>{{ h.source }}</td>
+                        <td>{{ h.category }}</td>
+                        <td>{{ h.notes }}</td>
+                    </tr>
+                </table>
+            </div>
+        
+        </div>
+
+        {% endverbatim %} 
+{% endblock main_container %}

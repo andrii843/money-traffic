@@ -1,0 +1,11 @@
+<!-- Нова Категорія -->
+<div class="wrap-category" ng-if="user_is_auth&&display_category_form">
+  <h3>Нова категорія витрат</h3>
+  <form novalidate>
+    <div class="form-group">
+      <input type="text" class="form-control" ng-model="category.name" placeholder="Категорія витрат">
+    </div>
+    <button class="btn btn-success" ng-click="store_category(category)">Зберегти категорію</button>
+    <button class="btn btn-danger" ng-click="close_category_form()">Закрити форму</button>
+  </form>  
+</div>
