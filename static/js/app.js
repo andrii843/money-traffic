@@ -104,6 +104,7 @@ angular.module("money", ['ngRoute','ngCookies'])
             $scope.get_categories();             
         }
         
+<<<<<<< HEAD
         $scope.update_user_info();
         $scope.init();
     })
@@ -366,3 +367,7 @@ angular.module("money", ['ngRoute','ngCookies'])
             }
         }
     })
+=======
+    });
+
+>>>>>>> rest_api

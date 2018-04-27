@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'saves',
     'sources',
     'users',
+
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -140,4 +142,14 @@ STATICFILES_DIRS = [
 
 AUTH_USER_MODEL = 'users.User'
 
+<<<<<<< HEAD
 LOGOUT_REDIRECT_URL = 'main_page'
+=======
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+>>>>>>> rest_api
