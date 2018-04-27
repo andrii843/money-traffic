@@ -1,6 +1,8 @@
 from . import views
 from django.urls import include, path
 
+from categories.views import get_list
+
 urlpatterns = [
     path('', views.main_page, name='main_page'),
     # path('register/', views.RegisterFormView.as_view(), name='register_in'),
@@ -16,8 +18,10 @@ urlpatterns = [
     path('api/register/', views.register_user, name='register_user'),
     
 
-    path('api/category/add/', views.add_category, name='add_category'),
-    path('api/categories/', views.show_categories, name='show_categories'),
+    path('api/category/add/', get_list, name='add_category'),
+    # path('api/category/add/', views.add_category, name='add_category'),
+    # path('api/categories/', views.show_categories, name='show_categories'),
+    path('api/categories/', get_list, name='show_categories'),
 
     path('api/source/add/', views.add_source, name='add_source'),
     path('api/sources/', views.show_sources, name='show_sources'),

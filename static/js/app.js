@@ -48,7 +48,7 @@ angular.module("money", ['ngRoute','ngCookies'])
         // Отримуємо інформацію про користувача, якщо користувач не залогований, 
         // то переходимо на сторінку авторизації
         $scope.update_user_info = function(){
-            $http.get('http://localhost:8000/api/user/')
+            $http.get('/api/user/')
                 .then(function successCallback(response) {
                     $scope.user = response.data;
 
@@ -70,7 +70,7 @@ angular.module("money", ['ngRoute','ngCookies'])
 
 
         $scope.get_sources = function(){
-            $http.get('http://localhost:8000/api/sources/')
+            $http.get('/api/sources/')
                 .then(function successCallback(response) {
                     $scope.sources = response.data;
                 }, function errorCallback(response) {
@@ -79,16 +79,17 @@ angular.module("money", ['ngRoute','ngCookies'])
         }
 
         $scope.get_categories = function(){
-            $http.get('http://localhost:8000/api/categories/')
+            $http.get('/api/categories/')
                 .then(function successCallback(response) {
                     $scope.categories = response.data;
+                    console.log(response.data);
                 }, function errorCallback(response) {
                     console.log("Error!!!" + response.err);
                 });
         }        
 
         $scope.get_saves = function(){
-            $http.get('http://localhost:8000/api/saves/')
+            $http.get('/api/saves/')
                 .then(function successCallback(response) {
                     $scope.saves = response.data;
                 }, function errorCallback(response) {
@@ -103,8 +104,7 @@ angular.module("money", ['ngRoute','ngCookies'])
             $scope.get_saves();
             $scope.get_categories();             
         }
-        
-<<<<<<< HEAD
+
         $scope.update_user_info();
         $scope.init();
     })
@@ -125,7 +125,7 @@ angular.module("money", ['ngRoute','ngCookies'])
                         password: formData.password,
                     };
 
-                    $http.post('http://localhost:8000/api/login/', objUser)
+                    $http.post('/api/login/', objUser)
                         .then(function successCallback(response) {
                             $scope.update_user_info();
                             $scope.init();
@@ -148,7 +148,7 @@ angular.module("money", ['ngRoute','ngCookies'])
 
                 // Натискаємо кнопку авторизації
                 $scope.logout = function(){
-                    $http.post('http://localhost:8000/api/logout/')
+                    $http.post('/api/logout/')
                         .then(function successCallback(response) {
                             $scope.user_is_auth = false;
                         }, function errorCallback(response) {
@@ -176,7 +176,7 @@ angular.module("money", ['ngRoute','ngCookies'])
                         email: formData.email,
                     }
 
-                    $http.post('http://localhost:8000/api/register/',objNewUser)
+                    $http.post('/api/register/',objNewUser)
                         .then(function successCallback(response) {
                             $scope.update_user_info();
                         }, function errorCallback(response) {
@@ -213,7 +213,7 @@ angular.module("money", ['ngRoute','ngCookies'])
                     };
 
 
-                    $http.post('http://localhost:8000/api/category/add/',obj)
+                    $http.post('/api/category/add/',obj)
                         .then(function successCallback(response) {
                             $scope.update_user_info();
                             $scope.display_category_form = false;
@@ -258,7 +258,7 @@ angular.module("money", ['ngRoute','ngCookies'])
                     };
 
 
-                    $http.post('http://localhost:8000/api/source/add/',obj)
+                    $http.post('/api/source/add/',obj)
                         .then(function successCallback(response) {
                             $scope.update_user_info();
                             $scope.display_source_form = false;   
@@ -305,7 +305,7 @@ angular.module("money", ['ngRoute','ngCookies'])
                     };
 
 
-                    $http.post('http://localhost:8000/api/save/add/',obj)
+                    $http.post('/api/save/add/',obj)
                         .then(function successCallback(response) {
                             $scope.update_user_info();
                             $scope.display_save_form = false;
@@ -367,7 +367,3 @@ angular.module("money", ['ngRoute','ngCookies'])
             }
         }
     })
-=======
-    });
-
->>>>>>> rest_api
