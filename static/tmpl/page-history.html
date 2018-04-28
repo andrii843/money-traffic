@@ -1,0 +1,21 @@
+<div ng-hide="!user_is_auth">
+    <table class="table table-condensed table-bordered">
+        <tr>
+            <th>Дата</th>
+            <th>Сума</th>
+            <th>Тип</th>
+            <th>Джерело</th>
+            <th>Категорія</th>
+            <th>Коментар</th>
+        </tr>
+        <tr ng-repeat="h in history">
+            <td>{{ h.opdate }}</td>
+            <td>{{ h.summa }}</td>
+            <td>{{ h.type }}</td>
+            <td>{{ h.source }}</td>
+            <td>{{ h.category }}</td>
+            <td>{{ h.notes }}</td>
+        </tr>
+    </table>
+</div>
+        

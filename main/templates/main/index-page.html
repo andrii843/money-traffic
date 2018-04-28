@@ -8,9 +8,9 @@
                 <li class="sidebar-brand">
                         Smart Wallet
                 </li>
-                <li><a href="#" ng-click="addCategoryClick()">Додати нову категорію</a></li>
-                <li><a href="#" ng-click="addSourceClick()">Додати джерело надходжень</a></li>
-                <li><a href="#" ng-click="addSaveClick()">Додати місце для накопичень</a></li>                
+                <li><a href="/#add-category" ng-click="addCategoryClick()">Додати нову категорію</a></li>
+                <li><a href="/#add-source" ng-click="addSourceClick()">Додати джерело надходжень</a></li>
+                <li><a href="/#add-save" ng-click="addSaveClick()">Додати місце для накопичень</a></li>                
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->    
@@ -29,18 +29,22 @@
                     <a href="#menu-toggle" class="btn btn-default navbar-btn" id="menu-toggle" ng-hide="!user_is_auth">Меню</a>
                 </div>
 
-                <div class="wrap-cmd navbar-header" ng-if="user_is_auth">
-                    <button class="btn btn-default navbar-btn" ng-click="addIncomeClick()">Додати надходження</button>
-                </div>
 
                 <div class="wrap-cmd navbar-header" ng-if="user_is_auth">
-                    <button class="btn btn-default navbar-btn" ng-click="addOutcomeClick()">Додати витрату</button>
-                </div>
+                    <a href="/#main" class="btn btn-default navbar-btn">Головна</a>
+                </div>     
 
                 <div class="wrap-cmd navbar-header" ng-if="user_is_auth">
-                    <button class="btn btn-default navbar-btn" ng-click="addHistoryClick()">Історія операцій</button>
-                </div>
+                    <a href="/#income" class="btn btn-default navbar-btn">Додати надходження</a>
+                </div>                
 
+                <div class="wrap-cmd navbar-header" ng-if="user_is_auth">
+                    <a href="/#outcome" class="btn btn-default navbar-btn">Додати витрата</a>
+                </div>                
+
+                <div class="wrap-cmd navbar-header" ng-if="user_is_auth">
+                    <a href="/#history" class="btn btn-default navbar-btn">Історія</a>
+                </div>
 
                 <ul class="nav navbar-nav navbar-right">
                     <li><logout-section></logout-section></li>
@@ -51,6 +55,7 @@
         
         <div class="row">
            
+            
 
             <div class="col-md-4 col-md-offset-4" ng-if="!user_is_auth">
                 <div>
@@ -75,51 +80,10 @@
 
             <div class="wrap" ng-hide="!user_is_auth">
                 <div class="col-md-12">
-                    <category-form-add></category-form-add>
-                    <source-form-add></source-form-add>
-                    <save-form-add></save-form-add>
-
-                    <income-form></income-form>
-                    <outcome-form></outcome-form>
-                </div>
-
-                <div class="col-md-12">
-                    <h4>Джерела надходжень</h4>
-                    <div ng-repeat="source in sources" class="item"><span class="item__title">{{source.name}}</span></div>                
-                </div>                
-
-
-                <div class="col-md-12">
-                    <h4>Категорії витрат</h4>
-                    <div ng-repeat="category in categories" class="item"><span class="item__title">{{category.name}}</span></div>                
-                </div>                
-
-                <div class="col-md-12">
-                    <h4>Місця накопичень</h4>
-                    <div ng-repeat="save in saves" class="item"><span class="item__title">{{save.name}}</span></div>
+                    <ng-view></ng-view>   
                 </div>
             </div>
-            <div ng-hide="!user_is_auth">
-                <table class="table table-condensed table-bordered">
-                    <tr>
-                        <th>Дата</th>
-                        <th>Сума</th>
-                        <th>Тип</th>
-                        <th>Джерело</th>
-                        <th>Категорія</th>
-                        <th>Коментар</th>
-                    </tr>
-                    <tr ng-repeat="h in history">
-                        <td>{{ h.opdate }}</td>
-                        <td>{{ h.summa }}</td>
-                        <td>{{ h.type }}</td>
-                        <td>{{ h.source }}</td>
-                        <td>{{ h.category }}</td>
-                        <td>{{ h.notes }}</td>
-                    </tr>
-                </table>
-            </div>
-        
+
         </div>
 
         {% endverbatim %} 

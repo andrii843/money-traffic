@@ -22,6 +22,45 @@ angular.module("money", ['ngRoute','ngCookies'])
 
     .config(function ($routeProvider) {
     $routeProvider
+
+        .when('/', {
+            templateUrl: '/static/tmpl/page-main.html',
+            controller: 'MoneyCtrl'
+        })    
+
+
+        .when('/add-save', {
+            templateUrl: '/static/tmpl/page-new-save.html',
+            controller: 'MoneyCtrl'
+        })  
+
+        .when('/add-category', {
+            templateUrl: '/static/tmpl/page-new-category.html',
+            controller: 'MoneyCtrl'
+        })  
+
+        .when('/add-source', {
+            templateUrl: '/static/tmpl/page-new-source.html',
+            controller: 'MoneyCtrl'
+        })  
+
+        .when('/history', {
+            templateUrl: '/static/tmpl/page-history.html',
+            controller: 'MoneyCtrl'
+        })    
+
+        .when('/income', {
+            templateUrl: '/static/tmpl/page-income.html',
+            controller: 'MoneyCtrl'
+        })    
+
+
+        .when('/outcome', {
+            templateUrl: '/static/tmpl/page-outcome.html',
+            controller: 'MoneyCtrl'
+        })    
+
+
         .otherwise({
             redirectTo: '/'
         });
@@ -90,6 +129,7 @@ angular.module("money", ['ngRoute','ngCookies'])
             $http.get('/api/categories/')
                 .then(function successCallback(response) {
                     $scope.categories = response.data;
+                    console.log('Категорії оновлені');
                 }, function errorCallback(response) {
                     console.log("Error!!!" + response.err);
                 });
@@ -240,16 +280,13 @@ angular.module("money", ['ngRoute','ngCookies'])
                             $scope.display_category_form = false;
                             $scope.get_categories();
                             $scope.get_history();
+                            console.log('OOOOO');
                         }, function errorCallback(response) {
                         console.log("Error!!!" + response.err);
                         });
 
                 }
 
-
-                $scope.close_category_form = function(){
-                    $scope.display_category_form = false;   
-                }
             }
         }
     })
@@ -351,7 +388,7 @@ angular.module("money", ['ngRoute','ngCookies'])
         return {
             replace: true,
             templateUrl: '/static/tmpl/income-form.html',
-            controller: function($scope, $http){
+            controller: function($scope, $http, $location){
 
                 $scope.display_income_form = false;
 
@@ -382,7 +419,11 @@ angular.module("money", ['ngRoute','ngCookies'])
                         .then(function successCallback(response) {
                             $scope.update_user_info();
                             $scope.get_history();
-                            $scope.display_income_form = false;                            
+                            $scope.display_income_form = false;
+                            $location.path('/history');
+
+
+
                         }, function errorCallback(response) {
                         console.log("Error!!!" + response.err);
                         });
@@ -402,7 +443,7 @@ angular.module("money", ['ngRoute','ngCookies'])
         return {
             replace: true,
             templateUrl: '/static/tmpl/outcome-form.html',
-            controller: function($scope, $http){
+            controller: function($scope, $http, $location){
 
                 $scope.display_outcome_form = false;
 
@@ -432,7 +473,8 @@ angular.module("money", ['ngRoute','ngCookies'])
                         .then(function successCallback(response) {
                             $scope.update_user_info();
                             $scope.get_history();
-                            $scope.display_outcome_form = false;                            
+                            $scope.display_outcome_form = false;   
+                            $location.path('/history');                              
                         }, function errorCallback(response) {
                         console.log("Error!!!" + response.err);
                         });

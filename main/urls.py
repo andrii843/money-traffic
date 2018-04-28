@@ -1,5 +1,5 @@
 from . import views
-from django.urls import include, path
+from django.urls import include, path, re_path
 
 urlpatterns = [
     path('', views.main_page, name='main_page'),
@@ -30,8 +30,6 @@ urlpatterns = [
     path('api/income/add/', views.add_income, name='add_income'),
     path('api/outcome/add/', views.add_outcome, name='add_outcome'),
     path('api/saves/', views.show_saves, name='show_saves'),
-
-
 
 
 ]
