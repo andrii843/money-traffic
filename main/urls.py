@@ -30,6 +30,7 @@ urlpatterns = [
     path('api/income/add/', views.add_income, name='add_income'),
     path('api/outcome/add/', views.add_outcome, name='add_outcome'),
     path('api/saves/', views.show_saves, name='show_saves'),
+    re_path(r'^.+$', views.main_page, name='main'),
 
 
 ]
