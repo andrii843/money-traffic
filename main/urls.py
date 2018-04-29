@@ -25,6 +25,8 @@ urlpatterns = [
     path('api/outcomes/', views.show_outcomes, name='show_outcomes'),
     path('api/history/', views.show_history, name='show_history'),
 
+    path('api/total_saves/', views.total_saves, name='total_saves'),
+
 
     path('api/save/add/', views.add_save, name='add_save'),
     path('api/income/add/', views.add_income, name='add_income'),

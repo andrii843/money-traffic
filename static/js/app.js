@@ -161,6 +161,7 @@ angular.module("money", ['ngRoute','ngCookies'])
             $scope.get_saves();
             $scope.get_categories();   
             $scope.get_history();
+
         }
         
         $scope.update_user_info();
@@ -369,6 +370,7 @@ angular.module("money", ['ngRoute','ngCookies'])
                             $scope.update_user_info();
                             $scope.display_save_form = false;
                             $scope.get_saves();
+                            $scope.update_total_budget();
                         }, function errorCallback(response) {
                         console.log("Error!!!" + response.err);
                         });
@@ -418,6 +420,7 @@ angular.module("money", ['ngRoute','ngCookies'])
                     $http.post('/api/income/add/',obj)
                         .then(function successCallback(response) {
                             $scope.update_user_info();
+                            $scope.update_total_budget();
                             $scope.get_history();
                             $scope.display_income_form = false;
                             $location.path('/history');
@@ -484,6 +487,37 @@ angular.module("money", ['ngRoute','ngCookies'])
                 $scope.close_outcome_form = function(){
                     $scope.display_outcome_form = false;   
                 }
+            }
+        }
+    })
+
+    .directive('topPanel', function(){
+        return {
+            replace: true,
+            templateUrl: '/static/tmpl/top-panel.html',
+            controller: function($scope, $http){
+
+                
+
+
+                $scope.update_total_budget = function(){
+
+                    $http.get('/api/total_saves/')
+                        .then(function successCallback(response) {
+                            $scope.total_budget = response.data.sum;
+                        }, function errorCallback(response) {
+                            console.log("Error!!!" + response.err);
+                        });                    
+                }
+
+                $scope.update_total_budget();
+
+                
+
+
+
+                
+
             }
         }
     })

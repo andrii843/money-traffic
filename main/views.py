@@ -8,6 +8,7 @@ from .forms import UserForm
 from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.db import transaction, connection
+from django.db.models import Sum
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.shortcuts import redirect
@@ -73,6 +74,15 @@ def show_categories(request):
         user = request.user
         categories = list(Category.objects.filter(user=user).values())
         return JsonResponse(categories,safe=False)
+    return JsonResponse({},safe=False)
+
+def total_saves(request):
+    if request.user.is_authenticated:
+        user = request.user
+        total_budget = Save.objects.filter(user=user).aggregate(Sum("summa"))
+        #.values_list('summa_')
+        print(total_budget)
+        return JsonResponse({"sum":total_budget['summa__sum']},safe=False)
     return JsonResponse({},safe=False)
 
 
