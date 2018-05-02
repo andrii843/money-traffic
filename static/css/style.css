@@ -141,3 +141,8 @@ body {
     background-color: cyan;
     cursor: pointer;
 }
+
+
+form.ng-invalid span{
+    color: red;
+}

@@ -173,7 +173,7 @@ angular.module("money", ['ngRoute','ngCookies'])
         return {
             replace: true,
             templateUrl: '/static/tmpl/login-form.html',
-            controller: function($scope, $http){
+            controller: function($scope, $http, $location){
 
 
 
@@ -186,8 +186,11 @@ angular.module("money", ['ngRoute','ngCookies'])
 
                     $http.post('/api/login/', objUser)
                         .then(function successCallback(response) {
-                            $scope.update_user_info();
                             $scope.init();
+                            $scope.update_user_info();
+                            $scope.update_total_budget();
+                            $location.path('/#main');
+
                             // $scope.user_is_auth = true;
                         }, function errorCallback(response) {
                         console.log("Error!!!" + response.err);
@@ -225,7 +228,7 @@ angular.module("money", ['ngRoute','ngCookies'])
         return {
             replace: true,
             templateUrl: '/static/tmpl/register-form.html',
-            controller: function($scope, $http){
+            controller: function($scope, $http, $location){
 
 
 
@@ -240,9 +243,14 @@ angular.module("money", ['ngRoute','ngCookies'])
 
                     $http.post('/api/register/',objNewUser)
                         .then(function successCallback(response) {
+                            $scope.init();
                             $scope.update_user_info();
+                            $scope.update_total_budget();
+                            $location.path('/#main');
+
                         }, function errorCallback(response) {
                         console.log("Error!!!" + response.err);
+                        console.log("Error!!!" + response.data.error);
                         });                    
                 }
             }
@@ -281,7 +289,6 @@ angular.module("money", ['ngRoute','ngCookies'])
                             $scope.display_category_form = false;
                             $scope.get_categories();
                             $scope.get_history();
-                            console.log('OOOOO');
                         }, function errorCallback(response) {
                         console.log("Error!!!" + response.err);
                         });
@@ -414,8 +421,6 @@ angular.module("money", ['ngRoute','ngCookies'])
 
                     };
 
-                    console.log(obj)
-
 
                     $http.post('/api/income/add/',obj)
                         .then(function successCallback(response) {
@@ -423,10 +428,7 @@ angular.module("money", ['ngRoute','ngCookies'])
                             $scope.update_total_budget();
                             $scope.get_history();
                             $scope.display_income_form = false;
-                            $location.path('/history');
-
-
-
+                            $location.path('/#main');
                         }, function errorCallback(response) {
                         console.log("Error!!!" + response.err);
                         });
@@ -470,18 +472,54 @@ angular.module("money", ['ngRoute','ngCookies'])
 
                     };
 
-                    console.log(obj)
-
                     $http.post('/api/outcome/add/',obj)
                         .then(function successCallback(response) {
                             $scope.update_user_info();
+                            $scope.update_total_budget();
                             $scope.get_history();
                             $scope.display_outcome_form = false;   
-                            $location.path('/history');                              
+                            $location.path('/#main');
                         }, function errorCallback(response) {
                         console.log("Error!!!" + response.err);
                         });
 
+                }
+
+
+                $scope.check_outcome_sum = function(formData){
+
+                    var save_id = 0;
+                    $scope.notEnoughSum = false;
+                    try {
+                        // Якщо гаманець вибраний
+                        if(formData.hasOwnProperty('selectedSave')){
+                            save_id = formData.selectedSave.id
+
+                            if (save_id > 0) {
+                                var param = {"save_id": save_id};
+                                // Перевіряємо, чи в гаманці достатня сума коштів
+                                $http.post('/api/save_sum/',param)
+                                    .then(function successCallback(response) {
+                                        $scope.sum_in_wallet = response.data.summa;
+
+                                        if((formData.summa > 0) && (formData.summa > $scope.sum_in_wallet)) {
+                                            $scope.notEnoughSum = true;
+                                        }
+                                        
+
+                                    }, function errorCallback(response) {
+                                    console.log("Error!!!" + response.err);
+                                    });
+                            }
+
+                        }
+                    } catch(err) {
+                        // console.log(err)
+                    }
+
+
+
+                    
                 }
 
                 $scope.close_outcome_form = function(){
@@ -502,9 +540,13 @@ angular.module("money", ['ngRoute','ngCookies'])
 
                 $scope.update_total_budget = function(){
 
-                    $http.get('/api/total_saves/')
+                    $http.get('/api/total_sum/')
                         .then(function successCallback(response) {
-                            $scope.total_budget = response.data.sum;
+                            $scope.total_budget = response.data.total_budget;
+                            $scope.month_income = response.data.month_income;
+                            $scope.month_outcome = response.data.month_outcome;
+                            $scope.month_balance = response.data.month_balance;
+
                         }, function errorCallback(response) {
                             console.log("Error!!!" + response.err);
                         });                    
@@ -518,6 +560,65 @@ angular.module("money", ['ngRoute','ngCookies'])
 
                 
 
+            }
+        }
+    })
+
+    .directive('username', function($http, $q, $timeout) {
+        return {
+            require: 'ngModel',
+            link: function(scope, elm, attrs, ctrl) {
+                var usernames = ['Jim', 'John', 'Jill', 'Jackie'];
+
+                ctrl.$asyncValidators.username = function(modelValue, viewValue) {
+                    var username = modelValue || viewValue;
+
+                    if (ctrl.$isEmpty(modelValue)) {
+                        // consider empty model valid
+                        return $q.resolve();
+                    }
+
+                    var def = $q.defer();
+
+                    var param = {'username': username}
+
+                    $http.post('/api/check_user/', param)
+                        .then(function successCallback(response) {
+                            def.reject('exists');
+                        }, function errorCallback(response) {
+                            def.resolve();
+                        });                
+
+                    return def.promise;
+                }
+            }
+        }
+    })
+
+
+    .directive('smartFloat',function(){
+        return{
+            require: "ngModel",
+            link: function(scope, elm, attrs, ctrl){
+                
+                var regex=/^\d{1,15}([\.,](\d{1,2})?)?$/;
+                ctrl.$parsers.unshift(function(viewValue){
+                    if( regex.test(viewValue)){
+                        var floatValue = viewValue.replace(',','.');
+                        floatValue = parseFloat(floatValue);
+                        if(floatValue > 0) {
+                            ctrl.$setValidity('validFloat',true);
+                            return parseFloat(floatValue);
+                        }
+                        else {
+                            ctrl.$setValidity('validFloat',false);
+                        }
+                    }
+                    else{
+                        ctrl.$setValidity('validFloat',false);
+                    }
+                    return viewValue;
+                });
             }
         }
     })

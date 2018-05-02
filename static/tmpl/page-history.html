@@ -1,16 +1,28 @@
 <div ng-hide="!user_is_auth">
     <table class="table table-condensed table-bordered">
         <tr>
-            <th>Дата</th>
-            <th>Сума</th>
-            <th>Тип</th>
-            <th>Джерело</th>
-            <th>Категорія</th>
-            <th>Коментар</th>
+            <th><a href="#" ng-click="orderByField='opdate'; reverseSort=!reverseSort">Дата
+                <span ng-show="orderByField == 'opdate'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span>
+            </a></th>
+            <th><a href="#" ng-click="orderByField='summa'; reverseSort=!reverseSort">Сума
+                <span ng-show="orderByField == 'summa'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span>
+            </a></th>
+            <th><a href="#" ng-click="orderByField='type'; reverseSort=!reverseSort">Тип
+                <span ng-show="orderByField == 'type'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span>
+            </a></th>
+            <th><a href="#" ng-click="orderByField='source'; reverseSort=!reverseSort">Джерело
+                <span ng-show="orderByField == 'source'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span>
+            </a></th>
+            <th><a href="#" ng-click="orderByField='category'; reverseSort=!reverseSort">Категорія
+                <span ng-show="orderByField == 'category'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span>
+            </a></th>
+            <th><a href="#" ng-click="orderByField='notes'; reverseSort=!reverseSort">Коментар
+                <span ng-show="orderByField == 'notes'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span>
+            </a></th>
         </tr>
-        <tr ng-repeat="h in history">
+        <tr ng-repeat="h in history|orderBy:orderByField:reverseSort">
             <td>{{ h.opdate }}</td>
-            <td>{{ h.summa }}</td>
+            <td>{{ h.summa | number:2 }}</td>
             <td>{{ h.type }}</td>
             <td>{{ h.source }}</td>
             <td>{{ h.category }}</td>

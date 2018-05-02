@@ -26,12 +26,17 @@ urlpatterns = [
     path('api/history/', views.show_history, name='show_history'),
 
     path('api/total_saves/', views.total_saves, name='total_saves'),
+    path('api/total_sum/', views.total_sum, name='total_sum'),
+
+    path('api/check_user/', views.check_user, name='check_user'),
+
 
 
     path('api/save/add/', views.add_save, name='add_save'),
     path('api/income/add/', views.add_income, name='add_income'),
     path('api/outcome/add/', views.add_outcome, name='add_outcome'),
     path('api/saves/', views.show_saves, name='show_saves'),
+    path('api/save_sum/', views.get_save_sum, name='get_save_sum'),
     re_path(r'^.+$', views.main_page, name='main'),
 
 

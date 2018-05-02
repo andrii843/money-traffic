@@ -1,22 +1,41 @@
 <div>
     <h3>Реєстрація нового користувача</h3>
-    <form novalidate>
+    <form name="registerForm" novalidate>
       <div class="form-group">
-        <input type="text" class="form-control" ng-model="reguser.login" placeholder="Користувач">
+        <input name="reguserlogin" type="text" class="form-control" ng-model="reguser.login" placeholder="Користувач" required username>
+        <span ng-show="registerForm.reguserlogin.$touched && registerForm.reguserlogin.$invalid">
+          <span ng-show="registerForm.reguserlogin.$error.required">Поле не заповнено</span>  
+          <span ng-show="registerForm.reguserlogin.$error.username">Користувач вже зареэстрований</span>  
+        </span>
+
       </div>
 
       <div class="form-group">
-        <input type="password" class="form-control" ng-model="reguser.password" placeholder="Пароль">
+        <input name="reguserpaswd" type="password" class="form-control" ng-model="reguser.password" placeholder="Пароль" required>
+        <span ng-show="registerForm.reguserpaswd.$touched && registerForm.reguserpaswd.$invalid">
+          <span ng-show="registerForm.reguserpaswd.$error.required">Поле не заповнено</span>
+        </span>
+
+
       </div>
 
       <div class="form-group">
-        <input type="password" class="form-control" ng-model="reguser.password_repeat" placeholder="Повторити пароль">
+        <input name="reguserrepeatpaswd" type="password" class="form-control" ng-model="reguser.password_repeat" placeholder="Повторити пароль" ng-pattern="reguser.password" required>
+        <span ng-show="registerForm.reguserrepeatpaswd.$touched && registerForm.reguserrepeatpaswd.$invalid">
+          <span ng-show="registerForm.reguserrepeatpaswd.$error.required">Поле не заповнено</span>  
+          <span ng-show="registerForm.reguserrepeatpaswd.$error.pattern">Паролі не співпадають</span>  
+        </span>
+
       </div>
 
       <div class="form-group">
-        <input type="email" class="form-control" ng-model="reguser.email" placeholder="e-mail">
+        <input name="reguseremail" type="email" class="form-control" ng-model="reguser.email" placeholder="e-mail" required>
+        <span ng-show="registerForm.reguseremail.$touched && registerForm.reguseremail.$invalid">
+          <span ng-show="registerForm.reguseremail.$error.required">Поле не заповнено</span>  
+          <span ng-show="registerForm.reguseremail.$error.email">Не правильно вказана електронна пошта</span>  
+        </span>        
       </div>
 
-      <button class="btn btn-success" ng-click="register(reguser)">Зареєструватися</button>
+      <button class="btn btn-success" ng-click="register(reguser)" ng-disabled="registerForm.$invalid">Зареєструватися</button>
     </form>
 </div>

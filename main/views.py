@@ -22,6 +22,7 @@ from incomes.models import Income
 from outcomes.models import Outcome
 from django.core import serializers
 import json
+import datetime
 
 
 # Create your views here.
@@ -80,10 +81,60 @@ def total_saves(request):
     if request.user.is_authenticated:
         user = request.user
         total_budget = Save.objects.filter(user=user).aggregate(Sum("summa"))
-        #.values_list('summa_')
-        print(total_budget)
         return JsonResponse({"sum":total_budget['summa__sum']},safe=False)
     return JsonResponse({},safe=False)
+
+
+def total_sum(request):
+    if request.user.is_authenticated:
+        user = request.user
+
+        total_budget = Save.objects.filter(user=user).aggregate(Sum("summa"))
+        if type(total_budget['summa__sum']) == type(None):
+            total_budget_sum = 0
+        else:
+            total_budget_sum = total_budget['summa__sum']
+
+        today = datetime.date.today() 
+        
+        # Поступлення в поточному місяці
+        month_income = Income.objects.filter(user=user, created_at__month=today.month).aggregate(Sum("summa"))
+        if type(month_income['summa__sum']) == type(None):
+            month_income_sum = 0
+        else:
+            month_income_sum = month_income['summa__sum']
+
+        # Витрати в поточному місяці
+        month_outcome = Outcome.objects.filter(user=user, created_at__month=today.month).aggregate(Sum("summa"))
+        if type(month_outcome['summa__sum']) == type(None):
+            month_outcome_sum = 0
+        else:
+            month_outcome_sum = month_outcome['summa__sum']
+
+     
+        return JsonResponse({"total_budget":total_budget['summa__sum'],
+                "month_income":float(month_income_sum),
+                "month_outcome":float(month_outcome_sum),
+                "month_balance": float(month_income_sum) - float(month_outcome_sum)
+            },safe=False)
+
+
+    return JsonResponse({},safe=False)
+
+
+def check_user(request):
+    if request.method == 'POST':
+        body = request.body.decode("utf-8")
+        request.POST = json.loads(body)
+
+        username = request.POST['username']
+
+        user = User.objects.filter(username=username)
+
+        if len(user) == 0:
+            return JsonResponse({},safe=False,status=404)
+    return JsonResponse({},safe=False)
+
 
 
 def add_source(request):
@@ -116,6 +167,9 @@ def add_income(request):
         user = User.objects.get(id=user_id)
         source = Source.objects.get(id=source_id)
         fsave = Save.objects.get(id=save_id)
+
+        fsave.summa = float(fsave.summa) + float(summa)
+        fsave.save()
 
         Income.objects.create(user=user, notes=notes, source=source, fsave=fsave, summa=summa)
     return JsonResponse({},safe=False)    
@@ -179,6 +233,17 @@ def show_outcomes(request):
 
     return JsonResponse({},safe=False)
 
+def get_save_sum(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            body = request.body.decode("utf-8")
+            request.POST = json.loads(body)
+            save_id = request.POST['save_id']
+            fsave = Save.objects.get(id=save_id)
+            return JsonResponse({"summa":float(fsave.summa)},safe=False)
+    return JsonResponse({},safe=False, status=404)
+
+
 
 def add_outcome(request):
     if request.method == 'POST':
@@ -194,6 +259,9 @@ def add_outcome(request):
         user = User.objects.get(id=user_id)
         category = Category.objects.get(id=category_id)
         fsave = Save.objects.get(id=save_id)
+
+        fsave.summa = float(fsave.summa) - float(summa)
+        fsave.save()
 
         Outcome.objects.create(user=user, notes=notes, category=category, fsave=fsave, summa=summa)
     return JsonResponse({},safe=False)    
@@ -240,21 +308,26 @@ def logout_user(request):
 
 def register_user(request):
     if request.method == 'POST':
-        body = request.body.decode("utf-8")
-        request.POST = json.loads(body)
 
-        username = request.POST['login']
-        passwd = request.POST['password']
-        email = request.POST['email']
+        try:
+            body = request.body.decode("utf-8")
+            request.POST = json.loads(body)
 
-        user = User.objects.create_user(username=username, email=email, password=passwd)
-        user.save()
+            username = request.POST['login']
+            passwd = request.POST['password']
+            email = request.POST['email']
 
-        ''' Після реєстрації проводимо авторизацію користувача '''
-        # user = authenticate(request, username=username, password=passwd)
-        if user is not None:
-            login(request, user)
-            return JsonResponse({"user":request.user.id},safe=False)        
+            user = User.objects.create_user(username=username, email=email, password=passwd)
+            user.save()
+
+            ''' Після реєстрації проводимо авторизацію користувача '''
+            # user = authenticate(request, username=username, password=passwd)
+            if user is not None:
+                login(request, user)
+                return JsonResponse({"user":request.user.id},safe=False)
+        except Exception as e:
+            print(str(e))
+            return JsonResponse({"error":str(e)},safe=False, status=500)
 
 
     return JsonResponse({},safe=False)

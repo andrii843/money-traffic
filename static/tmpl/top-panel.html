@@ -1,15 +1,8 @@
 <div class="col-md-12 panel panel-default" ng-if="user_is_auth">
     <div class="row">
-        <div class="col-md-3">Total budget(including saves)</div>
-        <div class="col-md-3">This Month Incomes:</div>
-        <div class="col-md-3">This Month Outcomes:</div>
-        <div class="col-md-3">This Month Balance:</div>
+        <div class="col-md-3">Загальний бюджет: <span>{{ total_budget }}</span></div>
+        <div class="col-md-3">This Month Incomes: <span>{{ month_income }}</span></div>
+        <div class="col-md-3">This Month Outcomes:<span>{{ month_outcome }}</span></div>
+        <div class="col-md-3">This Month Balance:<span>{{ month_balance }}</span></div>
     </div>
-    <div class="row">
-        <div class="col-md-3"><input type="text" ng-model="total_budget" readonly></div>
-        <div class="col-md-3"></div>
-        <div class="col-md-3"></div>
-        <div class="col-md-3"></div>
-    </div>
-
 </div>
